@@ -8,42 +8,46 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
-/**
- * 회원 엔티티
- * DB 테이블명: member
- */
 @Entity
 @Table(name = "member")
-@Getter
-@Setter
-@NoArgsConstructor
+@Getter @Setter @NoArgsConstructor
 public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_no")
-    private Long memberNo;                  // 회원 번호 (PK, 자동 증가)
+    private Long memberNo;
 
     @Column(name = "id", unique = true, nullable = false, length = 30)
-    private String id;                      // 로그인 ID (중복 불가)
+    private String id;
 
     @Column(name = "pwd", nullable = false)
-    private String pwd;                     // 비밀번호 (암호화 저장)
+    private String pwd;
 
     @Column(name = "name", nullable = false, length = 20)
-    private String name;                    // 이름
+    private String name;
 
     @Column(name = "email", unique = true, length = 50)
-    private String email;                   // 이메일
+    private String email;
 
     @Column(name = "role", nullable = false)
-    private String role;                    // 권한: ROLE_USER, ROLE_ADMIN
+    private String role;                    // ROLE_USER / ROLE_ADMIN
+
+    // ── 프로필 (기본 공개) ──────────────────────────
+    @Column(name = "profile_img")
+    private String profileImg;              // 프로필 사진 URL
+
+    // ── 프로필 (매칭 후 공개) ───────────────────────
+    @Column(name = "gender", length = 10)
+    private String gender;                  // MALE / FEMALE / OTHER
+
+    @Column(name = "age")
+    private Integer age;
+
+    @Column(name = "introduce", length = 300)
+    private String introduce;              // 자기소개
 
     @CreationTimestamp
     @Column(name = "reg_date", updatable = false)
-    private LocalDateTime regDate;          // 가입일 (자동 입력)
-
-    // =========================================================
-    // TODO: 필요한 필드 추가 (예: 프로필 사진, 전화번호 등)
-    // =========================================================
+    private LocalDateTime regDate;
 }
