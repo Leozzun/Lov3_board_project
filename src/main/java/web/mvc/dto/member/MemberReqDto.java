@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import web.mvc.domain.Member;
 
-// 회원가입 / 정보수정 요청 DTO
+// 회원가입 / 정보수정 / 프로필 수정 요청 DTO
 @Getter @Setter @NoArgsConstructor
 public class MemberReqDto {
 
@@ -13,6 +13,10 @@ public class MemberReqDto {
     private String pwd;
     private String name;
     private String email;
+    private String profileImg;
+    private String gender;      // MALE / FEMALE / OTHER
+    private Integer age;
+    private String introduce;
 
     public Member toMember() {
         Member member = new Member();
