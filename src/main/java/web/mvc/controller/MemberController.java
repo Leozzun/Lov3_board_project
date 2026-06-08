@@ -19,7 +19,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping
-    public ResponseEntity<?> signUp(@RequestBody MemberReqDto dto) {
+    public ResponseEntity<MemberResDto> signUp(@RequestBody MemberReqDto dto) {
 
         MemberResDto result =  memberService.signUp(dto);
 
@@ -27,14 +27,14 @@ public class MemberController {
     }
 
     @GetMapping("/check")
-    public ResponseEntity<?> checkDuplicateId(@RequestParam String id) {
+    public ResponseEntity<Boolean> checkDuplicateId(@RequestParam String id) {
         boolean result =  memberService.checkDuplicateId(id);
 
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     @GetMapping("/my")
-    public ResponseEntity<?> getMyInfo(@AuthenticationPrincipal CustomMemberDetails memberDetails) {
+    public ResponseEntity<MemberResDto> getMyInfo(@AuthenticationPrincipal CustomMemberDetails memberDetails) {
 
         MemberResDto result =  memberService.getMyInfo(memberDetails.getMember().getMemberNo());
 
@@ -42,7 +42,7 @@ public class MemberController {
     }
 
     @PutMapping("/my")
-    public ResponseEntity<?> updateMyInfo(@AuthenticationPrincipal CustomMemberDetails memberDetails, @RequestBody MemberReqDto dto) {
+    public ResponseEntity<MemberResDto> updateMyInfo(@AuthenticationPrincipal CustomMemberDetails memberDetails, @RequestBody MemberReqDto dto) {
 
         MemberResDto result =  memberService.updateMyInfo(memberDetails.getMember().getMemberNo(), dto);
 
@@ -50,7 +50,7 @@ public class MemberController {
     }
 
     @DeleteMapping("/my")
-    public ResponseEntity<?> deleteMyAccount(@AuthenticationPrincipal CustomMemberDetails memberDetails) {
+    public ResponseEntity<Void> deleteMyAccount(@AuthenticationPrincipal CustomMemberDetails memberDetails) {
 
         memberService.deleteMyAccount(memberDetails.getMember().getMemberNo());
 

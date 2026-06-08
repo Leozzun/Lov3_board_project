@@ -8,6 +8,7 @@ import java.util.List;
 public interface PlaceService {
 
     List<PlaceResDto> getAllPlaces();
+
     List<PlaceResDto> searchPlaces(String keyword);
 
     PlaceResDto getPlace(Long placeId);
