@@ -65,8 +65,14 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/boards").permitAll()
                 .requestMatchers(HttpMethod.GET, "/boards/**").permitAll()
 
-                // 댓글 조회 - 누구나 가능
-                .requestMatchers(HttpMethod.GET, "/boards/*/comments").permitAll()
+                // 장소 조회 - 누구나 가능
+                .requestMatchers(HttpMethod.GET, "/places").permitAll()
+                .requestMatchers(HttpMethod.GET, "/places/**").permitAll()
+
+                // 장소 관리 (추가/수정/삭제) - ADMIN만 가능
+                .requestMatchers(HttpMethod.POST, "/places").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/places/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/places/**").hasRole("ADMIN")
 
                 // 관리자 기능 - ADMIN만 가능
                 .requestMatchers("/admin/**").hasRole("ADMIN")
