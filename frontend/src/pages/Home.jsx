@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { getPlaces, getBoards, getReceivedRequests } from '../api/axios'
 import { useAuth } from '../contexts/AuthContext'
-import picnicBg from '../assets/피크닉.jpg'
+import picnicBg from '../assets/picnic.jpg'
 
 export default function Home() {
   const { member } = useAuth()
