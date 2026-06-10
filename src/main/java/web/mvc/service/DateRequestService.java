@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface DateRequestService {
 
+    // 게시글에 데이트 신청 보내기
     DateRequestResDto sendRequest(DateRequestReqDto dateRequestReqDto, Long boardId, Long senderNo);
 
     // 특정 게시글에 들어온 데이트 신청 목록 조회 (게시글 작성자만 가능)

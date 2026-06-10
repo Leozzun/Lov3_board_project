@@ -10,4 +10,6 @@ public interface DateRequestRepository extends JpaRepository<DateRequest, Long> 
     List<DateRequest> findByBoard_BoardId(Long boardId);
 
     List<DateRequest> findBySender_MemberNo(Long memberNo);
+
+    List<DateRequest> findByBoard_Member_MemberNo(Long memberNo);
 }
