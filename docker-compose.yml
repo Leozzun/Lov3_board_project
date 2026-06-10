@@ -1,11 +1,25 @@
 services:
+  db:
+    image: mysql:8.0
+    container_name: mysql_db
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: jpa
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - mynet
+    restart: unless-stopped
+
   backend:
     image: ${DOCKER_USERNAME}/jwt-app:latest
     container_name: backend
     ports:
       - "8087:8087"
     volumes:
-      - upload-images:/app/images        # 업로드 이미지 영구 보존
+      - upload-images:/app/images
     environment:
       SPRING_JWT_SECRET: ${SPRING_JWT_SECRET}
       MYSQL_URL: ${MYSQL_URL}
@@ -13,6 +27,8 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       JAVA_TOOL_OPTIONS: "-Duser.timezone=Asia/Seoul -Dfile.encoding=UTF-8"
       SPRING_PROFILES_ACTIVE: prod
+    depends_on:
+      - db
     networks:
       - mynet
     restart: unless-stopped
@@ -29,7 +45,8 @@ services:
     restart: unless-stopped
 
 volumes:
-  upload-images:                         # Docker 관리 볼륨 (컨테이너 재시작해도 이미지 유지)
+  upload-images:
+  mysql-data:                            # DB 데이터 영구 보존
 
 networks:
   mynet:
