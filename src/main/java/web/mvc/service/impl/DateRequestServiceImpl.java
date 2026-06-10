@@ -24,9 +24,7 @@ import java.util.List;
 public class DateRequestServiceImpl implements DateRequestService {
 
     private final DateRequestRepository dateRequestRepository;
-
     private final BoardRepository boardRepository;
-
     private final MemberRepository memberRepository;
 
     @Override

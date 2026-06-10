@@ -1,6 +1,9 @@
 package web.mvc.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import web.mvc.domain.Board;
@@ -29,9 +32,11 @@ public class BoardServiceImpl implements BoardService {
     private final PlaceRepository placeRepository;
 
     @Override
-    public List<BoardResDto> getAllBoards() {
+    public Page<BoardResDto> getAllBoards(int page, int size) {
 
-        return boardRepository.findAllWithMemberAndPlace().stream().map(b -> new BoardResDto(b)).toList();
+        PageRequest pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "boardId"));
+
+        return boardRepository.findAllWithMemberAndPlace(pageable).map(BoardResDto::new);
     }
 
     @Override
@@ -42,6 +47,11 @@ public class BoardServiceImpl implements BoardService {
         board.setViewCount(board.getViewCount() + 1);
 
         return new BoardResDto(board);
+    }
+
+    @Override
+    public List<BoardResDto> getMyBoards(Long memberNo) {
+        return boardRepository.findByMember_MemberNoOrderByBoardIdDesc(memberNo).stream().map(BoardResDto::new).toList();
     }
 
     @Override

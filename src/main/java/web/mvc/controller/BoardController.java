@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Page;
 import web.mvc.dto.board.BoardReqDto;
 import web.mvc.dto.board.BoardResDto;
 import web.mvc.security.CustomMemberDetails;
@@ -20,8 +21,10 @@ public class BoardController {
     private final BoardService boardService;
 
     @GetMapping
-    public ResponseEntity<List<BoardResDto>> getAllBoards() {
-        return ResponseEntity.ok(boardService.getAllBoards());
+    public ResponseEntity<Page<BoardResDto>> getAllBoards(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(boardService.getAllBoards(page, size));
     }
 
     @GetMapping("/{boardId}")
@@ -30,6 +33,11 @@ public class BoardController {
         BoardResDto result = boardService.getBoard(boardId);
 
         return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
+
+    @GetMapping("/my")
+    public ResponseEntity<List<BoardResDto>> getMyBoards(@AuthenticationPrincipal CustomMemberDetails memberDetails) {
+        return ResponseEntity.ok(boardService.getMyBoards(memberDetails.getMember().getMemberNo()));
     }
 
     @GetMapping("/search")

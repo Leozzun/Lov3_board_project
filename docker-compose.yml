@@ -1,0 +1,36 @@
+services:
+  backend:
+    image: ${DOCKER_USERNAME}/jwt-app:latest
+    container_name: backend
+    ports:
+      - "8087:8087"
+    volumes:
+      - upload-images:/app/images        # 업로드 이미지 영구 보존
+    environment:
+      SPRING_JWT_SECRET: ${SPRING_JWT_SECRET}
+      MYSQL_URL: ${MYSQL_URL}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      JAVA_TOOL_OPTIONS: "-Duser.timezone=Asia/Seoul -Dfile.encoding=UTF-8"
+      SPRING_PROFILES_ACTIVE: prod
+    networks:
+      - mynet
+    restart: unless-stopped
+
+  frontend:
+    image: ${DOCKER_USERNAME}/lov3-frontend:latest
+    container_name: frontend
+    ports:
+      - "80:80"                          # 외부에서 80포트로 접근 → Nginx가 처리
+    depends_on:
+      - backend
+    networks:
+      - mynet
+    restart: unless-stopped
+
+volumes:
+  upload-images:                         # Docker 관리 볼륨 (컨테이너 재시작해도 이미지 유지)
+
+networks:
+  mynet:
+    external: true
