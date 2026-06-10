@@ -65,6 +65,9 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/boards").permitAll()
                 .requestMatchers(HttpMethod.GET, "/boards/**").permitAll()
 
+                // 장소 이미지 - 누구나 가능
+                .requestMatchers("/images/**").permitAll()
+
                 // 장소 조회 - 누구나 가능
                 .requestMatchers(HttpMethod.GET, "/places").permitAll()
                 .requestMatchers(HttpMethod.GET, "/places/**").permitAll()

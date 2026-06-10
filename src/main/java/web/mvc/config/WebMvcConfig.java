@@ -1,15 +1,28 @@
 package web.mvc.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.CacheControl;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-/**
- * CORS(Cross-Origin Resource Sharing) 설정
- * 프론트엔드(React, Vue 등)에서 이 서버로 API 요청이 가능하도록 허용
- */
+import java.nio.file.Paths;
+
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
+
+    @Value("${file.upload-dir}")
+    private String uploadDir;
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        // 업로드된 이미지를 파일시스템에서 직접 서빙 (캐시 없음)
+        String absolutePath = Paths.get(uploadDir).toAbsolutePath().toString();
+        registry.addResourceHandler("/images/**")
+                .addResourceLocations("file:" + absolutePath + "/")
+                .setCacheControl(CacheControl.noCache());
+    }
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {

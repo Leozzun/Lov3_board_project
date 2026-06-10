@@ -16,6 +16,7 @@ public class MemberResDto {
     private String gender;
     private Integer age;
     private String introduce;
+    private String role;
     private LocalDateTime regDate;
 
     public MemberResDto(Member member) {
@@ -27,6 +28,7 @@ public class MemberResDto {
         this.gender = member.getGender();
         this.age = member.getAge();
         this.introduce = member.getIntroduce();
+        this.role = member.getRole();
         this.regDate = member.getRegDate();
     }
 }
