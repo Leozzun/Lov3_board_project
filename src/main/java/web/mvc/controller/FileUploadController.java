@@ -40,7 +40,8 @@ public class FileUploadController {
         }
 
         String original = file.getOriginalFilename() != null ? file.getOriginalFilename() : "image.jpg";
-        String filename = System.currentTimeMillis() + "_" + original;
+        String ext = original.contains(".") ? original.substring(original.lastIndexOf(".")).toLowerCase() : ".jpg";
+        String filename = System.currentTimeMillis() + ext;
 
         Files.copy(file.getInputStream(), uploadPath.resolve(filename), StandardCopyOption.REPLACE_EXISTING);
 
