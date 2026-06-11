@@ -15,9 +15,14 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import web.mvc.jwt.JWTFilter;
 import web.mvc.jwt.JWTUtil;
 import web.mvc.jwt.LoginFilter;
+
+import java.util.List;
 
 /**
  * Spring Security 설정
@@ -32,6 +37,21 @@ public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
+
+    // CORS 설정 Bean - HandlerMappingIntrospector 의존 제거
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOriginPatterns(List.of("*"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+        config.setAllowedHeaders(List.of("*"));
+        config.setExposedHeaders(List.of("Authorization"));
+        config.setAllowCredentials(true);
+        config.setMaxAge(3600L);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
+    }
 
     // BCrypt 비밀번호 암호화 Bean 등록 (MemberServiceImpl에서 주입받아 사용)
     @Bean

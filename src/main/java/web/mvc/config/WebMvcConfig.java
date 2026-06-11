@@ -23,14 +23,4 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .setCacheControl(CacheControl.noCache());
     }
 
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOriginPatterns("*")
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                .allowedHeaders("*")
-                .exposedHeaders("Authorization")
-                .allowCredentials(true)
-                .maxAge(3600);
-    }
 }
