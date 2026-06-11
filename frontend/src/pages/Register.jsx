@@ -40,9 +40,9 @@ export default function Register() {
   }
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', minHeight: '100vh' }}>
+    <div className="auth-layout" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', minHeight: '100vh' }}>
       {/* Left */}
-      <div style={{
+      <div className="auth-layout-left" style={{
         background: '#0a0a0a',
         display: 'flex',
         flexDirection: 'column',
@@ -62,7 +62,7 @@ export default function Register() {
       </div>
 
       {/* Right */}
-      <div style={{
+      <div className="auth-layout-right" style={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',

@@ -85,9 +85,9 @@ export default function MyPage() {
 
       <div className="container" style={{ padding: '0 40px' }}>
         {/* Tabs */}
-        <div style={{ display: 'flex', borderBottom: '1px solid #e8e8e8' }}>
+        <div className="mypage-tabs" style={{ display: 'flex', borderBottom: '1px solid #e8e8e8' }}>
           {tabs.map(({ key, label }) => (
-            <button key={key} onClick={() => setActiveTab(key)} style={{
+            <button key={key} onClick={() => setActiveTab(key)} className="mypage-tab-btn" style={{
               padding: '24px 0', marginRight: '40px',
               background: 'none', border: 'none',
               fontSize: '14px', fontWeight: '700', letterSpacing: '0.5px',

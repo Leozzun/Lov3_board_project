@@ -6,6 +6,7 @@ import { useAuth } from '../contexts/AuthContext'
 const PAGE_SIZE = 10
 
 export default function Boards() {
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768)
   const [boards, setBoards] = useState([])
   const [places, setPlaces] = useState([])
   const [keyword, setKeyword] = useState('')
@@ -80,6 +81,12 @@ export default function Boards() {
     fetchBoards(0)
     showToast('등록되었습니다')
   }
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth <= 768)
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
 
   const handlePageChange = (page) => {
     fetchBoards(page)
@@ -165,62 +172,98 @@ export default function Boards() {
           <div className="empty"><div className="empty-icon">💌</div><p>게시글이 없어요</p></div>
         ) : (
           <div>
-            {/* Table header */}
-            <div style={{
-              display: 'grid', gridTemplateColumns: '60px 1fr 140px 80px 80px',
-              padding: '12px 0', borderBottom: '2px solid #0a0a0a',
-              fontSize: '11px', fontWeight: '700', letterSpacing: '1.5px',
-              textTransform: 'uppercase', color: '#a0a0a0',
-            }}>
-              <span>No</span>
-              <span>제목</span>
-              <span>장소</span>
-              <span>작성자</span>
-              <span style={{ textAlign: 'right' }}>조회</span>
-            </div>
-
-            {boards.map((board, i) => {
-              // 페이지네이션 모드: 전체 등록 순 번호 (오래된 글 = 1번)
-              const num = isFiltered
-                ? boards.length - i
-                : totalElements - currentPage * PAGE_SIZE - i
-              return (
-                <div key={board.boardId}>
-                  <Link to={`/boards/${board.boardId}`} style={{
-                    display: 'grid',
-                    gridTemplateColumns: '60px 1fr 140px 80px 80px',
-                    alignItems: 'center',
-                    padding: '24px 0',
-                    transition: 'opacity 0.2s',
-                  }}
-                    onMouseEnter={e => e.currentTarget.style.opacity = '0.5'}
-                    onMouseLeave={e => e.currentTarget.style.opacity = '1'}
-                  >
-                    <span style={{ fontSize: '13px', color: '#c0c0c0', fontWeight: '600' }}>
-                      {String(num).padStart(2, '0')}
-                    </span>
-                    <div>
-                      <p style={{ fontSize: '16px', fontWeight: '600', letterSpacing: '-0.2px', marginBottom: '4px' }}>
+            {isMobile ? (
+              /* 모바일 카드 뷰 */
+              boards.map((board, i) => {
+                const num = isFiltered
+                  ? boards.length - i
+                  : totalElements - currentPage * PAGE_SIZE - i
+                return (
+                  <div key={board.boardId}>
+                    <Link to={`/boards/${board.boardId}`} style={{ display: 'block', padding: '20px 0', transition: 'opacity 0.2s' }}
+                      onMouseEnter={e => e.currentTarget.style.opacity = '0.5'}
+                      onMouseLeave={e => e.currentTarget.style.opacity = '1'}
+                    >
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                        <span style={{ fontSize: '11px', color: '#c0c0c0', fontWeight: '600' }}>
+                          {String(num).padStart(2, '0')}
+                        </span>
+                        <span style={{ fontSize: '11px', color: '#a0a0a0' }}>{board.place?.placeName || '—'}</span>
+                      </div>
+                      <p style={{ fontSize: '16px', fontWeight: '700', letterSpacing: '-0.3px', marginBottom: '6px', color: '#0a0a0a' }}>
                         {board.title}
                       </p>
-                      <p style={{ fontSize: '13px', color: '#a0a0a0' }}>
-                        {board.content?.slice(0, 60)}{board.content?.length > 60 ? '...' : ''}
+                      <p style={{ fontSize: '13px', color: '#a0a0a0', marginBottom: '10px', lineHeight: 1.5 }}>
+                        {board.content?.slice(0, 50)}{board.content?.length > 50 ? '...' : ''}
                       </p>
-                    </div>
-                    <span style={{ fontSize: '12px', color: '#a0a0a0', letterSpacing: '0.3px' }}>
-                      {board.place?.placeName || '—'}
-                    </span>
-                    <span style={{ fontSize: '13px', color: '#5a5a5a' }}>
-                      {board.member?.name || '—'}
-                    </span>
-                    <span style={{ fontSize: '13px', color: '#a0a0a0', textAlign: 'right' }}>
-                      {board.viewCount || 0}
-                    </span>
-                  </Link>
-                  <div className="divider" />
+                      <div style={{ display: 'flex', gap: '16px', fontSize: '12px', color: '#c0c0c0' }}>
+                        <span>{board.member?.name || '—'}</span>
+                        <span>조회 {board.viewCount || 0}</span>
+                      </div>
+                    </Link>
+                    <div className="divider" />
+                  </div>
+                )
+              })
+            ) : (
+              /* 데스크탑 테이블 뷰 */
+              <>
+                <div style={{
+                  display: 'grid', gridTemplateColumns: '60px 1fr 140px 80px 80px',
+                  padding: '12px 0', borderBottom: '2px solid #0a0a0a',
+                  fontSize: '11px', fontWeight: '700', letterSpacing: '1.5px',
+                  textTransform: 'uppercase', color: '#a0a0a0',
+                }}>
+                  <span>No</span>
+                  <span>제목</span>
+                  <span>장소</span>
+                  <span>작성자</span>
+                  <span style={{ textAlign: 'right' }}>조회</span>
                 </div>
-              )
-            })}
+
+                {boards.map((board, i) => {
+                  const num = isFiltered
+                    ? boards.length - i
+                    : totalElements - currentPage * PAGE_SIZE - i
+                  return (
+                    <div key={board.boardId}>
+                      <Link to={`/boards/${board.boardId}`} style={{
+                        display: 'grid',
+                        gridTemplateColumns: '60px 1fr 140px 80px 80px',
+                        alignItems: 'center',
+                        padding: '24px 0',
+                        transition: 'opacity 0.2s',
+                      }}
+                        onMouseEnter={e => e.currentTarget.style.opacity = '0.5'}
+                        onMouseLeave={e => e.currentTarget.style.opacity = '1'}
+                      >
+                        <span style={{ fontSize: '13px', color: '#c0c0c0', fontWeight: '600' }}>
+                          {String(num).padStart(2, '0')}
+                        </span>
+                        <div>
+                          <p style={{ fontSize: '16px', fontWeight: '600', letterSpacing: '-0.2px', marginBottom: '4px' }}>
+                            {board.title}
+                          </p>
+                          <p style={{ fontSize: '13px', color: '#a0a0a0' }}>
+                            {board.content?.slice(0, 60)}{board.content?.length > 60 ? '...' : ''}
+                          </p>
+                        </div>
+                        <span style={{ fontSize: '12px', color: '#a0a0a0', letterSpacing: '0.3px' }}>
+                          {board.place?.placeName || '—'}
+                        </span>
+                        <span style={{ fontSize: '13px', color: '#5a5a5a' }}>
+                          {board.member?.name || '—'}
+                        </span>
+                        <span style={{ fontSize: '13px', color: '#a0a0a0', textAlign: 'right' }}>
+                          {board.viewCount || 0}
+                        </span>
+                      </Link>
+                      <div className="divider" />
+                    </div>
+                  )
+                })}
+              </>
+            )}
 
             {/* 페이지네이션 */}
             {!isFiltered && totalPages > 1 && (

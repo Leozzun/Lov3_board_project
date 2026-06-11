@@ -267,4 +267,27 @@ img { max-width: 100%; display: block; }
   .container { padding: 0 20px; }
   .section { padding: 80px 0; }
   .section-title { font-size: 26px; }
+  .page { padding-top: 64px; }
+
+  /* Modal */
+  .modal { padding: 28px 20px; max-height: 85vh; overflow-y: auto; border-radius: 12px; }
+  .modal-actions { flex-direction: column-reverse; }
+  .modal-actions .btn { width: 100%; justify-content: center; }
+
+  /* Buttons */
+  .btn { padding: 12px 20px; font-size: 13px; }
+
+  /* Auth (Login/Register) */
+  .auth-layout { grid-template-columns: 1fr !important; }
+  .auth-layout-left { display: none !important; }
+  .auth-layout-right { padding: 60px 32px !important; align-items: flex-start !important; padding-top: 80px !important; }
+
+  /* Navbar */
+  .nav-desktop { display: none !important; }
+  .nav-hamburger { display: flex !important; }
+
+  /* MyPage tabs */
+  .mypage-tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .mypage-tabs::-webkit-scrollbar { display: none; }
+  .mypage-tab-btn { padding: 20px 0 !important; margin-right: 24px !important; font-size: 13px !important; white-space: nowrap; }
 }
