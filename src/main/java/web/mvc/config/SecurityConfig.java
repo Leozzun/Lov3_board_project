@@ -80,6 +80,9 @@ public class SecurityConfig {
 
         // ===== URL별 접근 권한 설정 =====
         http.authorizeHttpRequests(auth -> auth
+                // Spring Boot 기본 에러 핸들러 - error dispatch 시 anonymous 접근 허용
+                .requestMatchers("/error").permitAll()
+
                 // 회원가입, ID중복확인 - 누구나 가능
                 .requestMatchers(HttpMethod.POST, "/members").permitAll()
                 .requestMatchers(HttpMethod.GET, "/members/check").permitAll()
