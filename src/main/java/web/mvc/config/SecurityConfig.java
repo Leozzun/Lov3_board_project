@@ -11,7 +11,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import web.mvc.jwt.JWTFilter;
 import web.mvc.jwt.JWTUtil;
@@ -78,8 +80,11 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.PUT, "/places/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/places/**").hasRole("ADMIN")
 
-                // 관리자 기능 - ADMIN만 가능
-                .requestMatchers("/admin/**").hasRole("ADMIN")
+                // 관리자 기능 - ADMIN만 가능 (HttpMethod 명시: Spring Security 6 MvcRequestMatcher 버그 우회)
+                .requestMatchers(HttpMethod.GET, "/admin/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/admin/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/admin/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/admin/**").hasRole("ADMIN")
 
                 // 나머지 모든 요청 - 로그인 필요
                 .anyRequest().authenticated()
@@ -88,6 +93,20 @@ public class SecurityConfig {
         // 세션 사용 안 함 (JWT는 Stateless)
         http.sessionManagement(session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+        // 401 vs 403 명확히 구분: 토큰 없음 → 401, 권한 부족 → 403
+        http.exceptionHandling(ex -> ex
+                .authenticationEntryPoint((request, response, e) -> {
+                    response.setStatus(401);
+                    response.setContentType("application/json;charset=UTF-8");
+                    response.getWriter().write("{\"error\":\"UNAUTHORIZED\",\"message\":\"로그인이 필요합니다.\",\"method\":\"" + request.getMethod() + "\",\"uri\":\"" + request.getRequestURI() + "\"}");
+                })
+                .accessDeniedHandler((request, response, e) -> {
+                    response.setStatus(403);
+                    response.setContentType("application/json;charset=UTF-8");
+                    response.getWriter().write("{\"error\":\"FORBIDDEN\",\"message\":\"권한이 없습니다.\",\"method\":\"" + request.getMethod() + "\",\"uri\":\"" + request.getRequestURI() + "\"}");
+                })
+        );
 
         // LoginFilter: POST /login 처리 (JWT 발급)
         LoginFilter loginFilter = new LoginFilter(
