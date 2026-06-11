@@ -8,6 +8,8 @@ import web.mvc.domain.Member;
 import web.mvc.dto.member.MemberReqDto;
 import web.mvc.dto.member.MemberResDto;
 import web.mvc.exception.MemberException;
+import web.mvc.repository.BoardRepository;
+import web.mvc.repository.DateRequestRepository;
 import web.mvc.repository.MemberRepository;
 import web.mvc.service.MemberService;
 
@@ -19,8 +21,9 @@ import java.util.List;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
-
     private final PasswordEncoder passwordEncoder;
+    private final BoardRepository boardRepository;
+    private final DateRequestRepository dateRequestRepository;
 
     @Override
     public MemberResDto signUp(MemberReqDto dto) {
@@ -72,9 +75,13 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void deleteMyAccount(Long memberNo) {
-        Member member = memberRepository.findById(memberNo).orElseThrow(() -> new MemberException("삭제할 계정이 없음"));
+        memberRepository.findById(memberNo)
+                .orElseThrow(() -> new MemberException("삭제할 계정이 없음"));
 
-        memberRepository.delete(member);
+        dateRequestRepository.deleteBySenderMemberNo(memberNo);
+        dateRequestRepository.deleteByBoardMemberMemberNo(memberNo);
+        boardRepository.deleteByMemberMemberNo(memberNo);
+        memberRepository.deleteById(memberNo);
     }
 
     @Override
@@ -85,9 +92,13 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void deleteMemberByAdmin(Long memberNo) {
-        Member member = memberRepository.findById(memberNo).orElseThrow(() -> new MemberException("삭제할 계정이 없음"));
+        memberRepository.findById(memberNo)
+                .orElseThrow(() -> new MemberException("삭제할 계정이 없음"));
 
-        memberRepository.delete(member);
-
+        // FK 제약 순서: 데이트신청 → 게시글 → 회원
+        dateRequestRepository.deleteBySenderMemberNo(memberNo);
+        dateRequestRepository.deleteByBoardMemberMemberNo(memberNo);
+        boardRepository.deleteByMemberMemberNo(memberNo);
+        memberRepository.deleteById(memberNo);
     }
 }
