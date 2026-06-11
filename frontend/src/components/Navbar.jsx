@@ -8,6 +8,9 @@ export default function Navbar() {
   const location = useLocation()
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [toast, setToast] = useState('')
+
+  const showToast = (msg) => { setToast(msg); setTimeout(() => setToast(''), 3000) }
 
   const isHome = location.pathname === '/'
 
@@ -19,7 +22,12 @@ export default function Navbar() {
 
   useEffect(() => { setMenuOpen(false) }, [location.pathname])
 
-  const handleLogout = () => { logout(); navigate('/'); setMenuOpen(false) }
+  const handleLogout = () => {
+    logout()
+    navigate('/')
+    setMenuOpen(false)
+    showToast('로그아웃 되었습니다')
+  }
 
   const transparent = isHome && !scrolled
   const textColor = transparent ? 'rgba(255,255,255,0.85)' : '#0a0a0a'
@@ -175,6 +183,7 @@ export default function Navbar() {
           )}
         </div>
       )}
+      {toast && <div className="toast">{toast}</div>}
     </>
   )
 }
