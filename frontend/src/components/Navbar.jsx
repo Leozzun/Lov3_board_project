@@ -75,9 +75,14 @@ export default function Navbar() {
                   onMouseEnter={e => e.target.style.opacity = '1'}
                   onMouseLeave={e => e.target.style.opacity = '0.7'}>마이페이지</Link>
                 {isAdmin && (
-                  <Link to="/admin" style={linkStyle}
-                    onMouseEnter={e => e.target.style.opacity = '1'}
-                    onMouseLeave={e => e.target.style.opacity = '0.7'}>관리자</Link>
+                  <>
+                    <Link to="/admin" style={linkStyle}
+                      onMouseEnter={e => e.target.style.opacity = '1'}
+                      onMouseLeave={e => e.target.style.opacity = '0.7'}>관리자</Link>
+                    <Link to="/voice" style={linkStyle}
+                      onMouseEnter={e => e.target.style.opacity = '1'}
+                      onMouseLeave={e => e.target.style.opacity = '0.7'}>음성채팅</Link>
+                  </>
                 )}
                 <button onClick={handleLogout}
                   className={transparent ? 'btn btn-outline-white' : 'btn btn-dark'}
@@ -147,7 +152,7 @@ export default function Navbar() {
                 { to: '/boards', label: '게시판' },
                 { to: '/places', label: '장소' },
                 { to: '/mypage', label: '마이페이지' },
-                ...(isAdmin ? [{ to: '/admin', label: '관리자' }] : []),
+                ...(isAdmin ? [{ to: '/admin', label: '관리자' }, { to: '/voice', label: '음성채팅' }] : []),
               ].map(({ to, label }) => (
                 <Link key={to} to={to} style={{
                   fontSize: '32px', fontWeight: '800', color: '#fff',

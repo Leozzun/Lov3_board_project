@@ -109,6 +109,9 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.PUT, "/admin/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/admin/**").hasRole("ADMIN")
 
+                // 음성채팅 토큰 발급 - ADMIN만 가능
+                .requestMatchers(HttpMethod.GET, "/voice/**").hasRole("ADMIN")
+
                 // 나머지 모든 요청 - 로그인 필요
                 .anyRequest().authenticated()
         );

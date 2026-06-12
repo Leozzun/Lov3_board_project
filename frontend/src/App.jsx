@@ -9,6 +9,7 @@ import Boards from './pages/Boards'
 import BoardDetail from './pages/BoardDetail'
 import MyPage from './pages/MyPage'
 import Admin from './pages/Admin'
+import VoiceChat from './pages/VoiceChat'
 
 function PrivateRoute({ children }) {
   const { member } = useAuth()
@@ -33,6 +34,7 @@ function AppRoutes() {
         <Route path="/boards/:boardId" element={<BoardDetail />} />
         <Route path="/mypage" element={<PrivateRoute><MyPage /></PrivateRoute>} />
         <Route path="/admin" element={<AdminRoute><Admin /></AdminRoute>} />
+        <Route path="/voice" element={<AdminRoute><VoiceChat /></AdminRoute>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </>

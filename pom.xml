@@ -77,6 +77,13 @@
             <version>2.10.1</version>
         </dependency>
 
+        <!-- LiveKit 서버 SDK (음성채팅 토큰 발급) -->
+        <dependency>
+            <groupId>io.livekit</groupId>
+            <artifactId>livekit-server</artifactId>
+            <version>0.12.1</version>
+        </dependency>
+
         <!-- DevTools (개발용 자동 재시작) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
